@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-purple: #6d28d9;
+  --color-brand-purple-dark: #4c1d95;
+  --color-brand-purple-light: #a78bfa;
+  --color-brand-gold: #d4af37;
+  --color-brand-gold-light: #f3d57f;
+  --color-brand-pink: #ec4899;
+  --color-brand-pink-light: #f9a8d4;
+
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #faf8fc;
+  color: #1f1530;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-purple-light);
+  border-radius: 9999px;
+}
+
+.gradient-brand {
+  background-image: linear-gradient(135deg, var(--color-brand-purple) 0%, var(--color-brand-pink) 100%);
+}
+
+.gradient-gold-text {
+  background-image: linear-gradient(135deg, var(--color-brand-gold) 0%, var(--color-brand-pink) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.skeleton {
+  background-image: linear-gradient(90deg, #ece8f5 25%, #f5f1fb 37%, #ece8f5 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
