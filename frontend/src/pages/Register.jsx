@@ -125,6 +125,12 @@ export default function Register() {
             Sign in
           </Link>
         </p>
+        <p className="text-center text-xs text-gray-400 mt-2">
+          Own a gift business?{' '}
+          <Link to="/vendor/register" className="text-brand-purple font-semibold hover:underline">
+            Sell on GiftGenius
+          </Link>
+        </p>
       </motion.div>
     </div>
   )

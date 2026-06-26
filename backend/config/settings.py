@@ -2,10 +2,16 @@
 Django settings for the GiftGenius AI backend.
 """
 
+import os
+
 from pathlib import Path
 from datetime import timedelta
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = 'django-insecure-6&4$snk584f62g*e@8#-mzf+!1$3k7mr5ep&%(r-%@eaq!0@%)'
 
@@ -35,6 +41,7 @@ INSTALLED_APPS = [
     'orders',
     'reminders',
     'recommendations',
+    'vendors',
 ]
 
 MIDDLEWARE = [
@@ -67,13 +74,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database - SQLite as required by the project spec
+# Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DATABASE_NAME"),
+        "USER": os.environ.get("DATABASE_USER"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+        "HOST": os.environ.get("DATABASE_HOST"),
+        "PORT": os.environ.get("DATABASE_PORT"),
+    },
 }
+
+# Temporary read-only alias for the legacy SQLite database, used only by
+# `manage.py migrate_sqlite_to_postgres` to copy data into Postgres. Safe to
+# remove once the migration has been verified.
+if (BASE_DIR / 'db.sqlite3').exists():
+    DATABASES["sqlite"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -123,7 +143,7 @@ SIMPLE_JWT = {
 
 # CORS - allow the Vite dev server to talk to the API
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
+    'http://localhost:5180',
+    'http://127.0.0.1:5180',
 ]
 CORS_ALLOW_CREDENTIALS = True

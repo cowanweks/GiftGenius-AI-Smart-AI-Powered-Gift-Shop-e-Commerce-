@@ -22,15 +22,26 @@ class CategoryListView(generics.ListAPIView):
     pagination_class = None
 
 
+def visible_products(user):
+    """Customers only ever see admin-approved products; staff see everything
+    (so they can review/approve pending vendor submissions)."""
+    qs = Product.objects.select_related('category', 'company')
+    if user.is_authenticated and user.is_staff:
+        return qs
+    return qs.filter(is_approved=True)
+
+
 class ProductListCreateView(generics.ListCreateAPIView):
-    """GET /api/products/ - browse/search/filter/sort products.
+    """GET /api/products/ - browse/search/filter/sort approved products.
     POST /api/products/ - admin creates a product.
     """
-    queryset = Product.objects.select_related('category').all()
     filterset_class = ProductFilter
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'rating', 'created_at', 'name']
     permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        return visible_products(self.request.user)
 
     def get_serializer_class(self):
         return ProductWriteSerializer if self.request.method == 'POST' else ProductSerializer
@@ -41,9 +52,11 @@ class ProductListCreateView(generics.ListCreateAPIView):
 
 class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """GET/PUT/PATCH/DELETE /api/products/<slug>/"""
-    queryset = Product.objects.select_related('category').all()
     lookup_field = 'slug'
     permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        return visible_products(self.request.user)
 
     def get_serializer_class(self):
         return ProductWriteSerializer if self.request.method in ('PUT', 'PATCH') else ProductSerializer
@@ -54,10 +67,12 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 class TrendingProductsView(generics.ListAPIView):
     """GET /api/products/trending/"""
-    queryset = Product.objects.filter(is_trending=True)[:8]
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
     pagination_class = None
+
+    def get_queryset(self):
+        return Product.objects.filter(is_trending=True, is_approved=True)[:8]
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -65,10 +80,12 @@ class TrendingProductsView(generics.ListAPIView):
 
 class FeaturedProductsView(generics.ListAPIView):
     """GET /api/products/featured/"""
-    queryset = Product.objects.filter(is_featured=True)[:8]
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
     pagination_class = None
+
+    def get_queryset(self):
+        return Product.objects.filter(is_featured=True, is_approved=True)[:8]
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -95,6 +112,9 @@ class SalesStatsView(APIView):
             .annotate(units_sold=Sum('quantity'))
             .order_by('-units_sold')[:5]
         )
+
+        from vendors.models import Company
+
         return Response({
             'total_orders': total_orders,
             'total_revenue': total_revenue,
@@ -102,4 +122,6 @@ class SalesStatsView(APIView):
             'total_products': total_products,
             'low_stock_products': low_stock,
             'best_sellers': list(best_sellers),
+            'pending_vendor_products': Product.objects.filter(is_approved=False).count(),
+            'pending_companies': Company.objects.filter(status='pending').count(),
         })

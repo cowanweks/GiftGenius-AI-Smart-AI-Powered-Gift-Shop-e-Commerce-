@@ -16,7 +16,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
-  const { isAuthenticated, isAdmin, user, logout } = useAuth()
+  const { isAuthenticated, isAdmin, isVendor, user, logout } = useAuth()
   const { itemCount } = useCart()
   const navigate = useNavigate()
 
@@ -84,7 +84,11 @@ export default function Navbar() {
                 <span className="text-sm font-medium">{user?.first_name || user?.username}</span>
               </button>
               <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-lg border border-purple-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <Link to="/dashboard" className="block px-4 py-2 text-sm hover:bg-purple-50">Dashboard</Link>
+                {isVendor ? (
+                  <Link to="/vendor" className="block px-4 py-2 text-sm hover:bg-purple-50">Vendor Dashboard</Link>
+                ) : (
+                  <Link to="/dashboard" className="block px-4 py-2 text-sm hover:bg-purple-50">Dashboard</Link>
+                )}
                 {isAdmin && <Link to="/admin" className="block px-4 py-2 text-sm hover:bg-purple-50">Admin Panel</Link>}
                 <button onClick={logout} className="block w-full text-left px-4 py-2 text-sm hover:bg-purple-50 text-red-500">
                   Logout
@@ -131,7 +135,11 @@ export default function Navbar() {
               ))}
               {isAuthenticated ? (
                 <>
-                  <Link to="/dashboard" onClick={() => setOpen(false)} className="text-gray-700 font-medium">Dashboard</Link>
+                  {isVendor ? (
+                    <Link to="/vendor" onClick={() => setOpen(false)} className="text-gray-700 font-medium">Vendor Dashboard</Link>
+                  ) : (
+                    <Link to="/dashboard" onClick={() => setOpen(false)} className="text-gray-700 font-medium">Dashboard</Link>
+                  )}
                   {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="text-gray-700 font-medium">Admin Panel</Link>}
                   <button onClick={() => { logout(); setOpen(false) }} className="text-left text-red-500 font-medium">Logout</button>
                 </>

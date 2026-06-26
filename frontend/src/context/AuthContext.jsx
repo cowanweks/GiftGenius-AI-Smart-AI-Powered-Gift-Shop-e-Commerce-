@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import * as authService from '../services/authService'
+import * as vendorService from '../services/vendorService'
 
 const AuthContext = createContext(null)
 
@@ -50,6 +51,12 @@ export function AuthProvider({ children }) {
     return data.user
   }
 
+  const registerVendor = async (payload) => {
+    const data = await vendorService.registerVendor(payload)
+    persistSession(data)
+    return data.user
+  }
+
   const logout = async () => {
     await authService.logout()
     localStorage.removeItem('access_token')
@@ -65,7 +72,10 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, isAuthenticated: !!user, isAdmin: !!user?.is_staff, login, register, logout, updateUser }}
+      value={{
+        user, loading, isAuthenticated: !!user, isAdmin: !!user?.is_staff, isVendor: !!user?.is_vendor,
+        login, register, registerVendor, logout, updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

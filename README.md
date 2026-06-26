@@ -112,6 +112,25 @@ Each recommendation includes a list of plain-English reasons explaining why it
 was suggested, satisfying the brief's example: Age 20–30, Female, Birthday,
 KSh 3,000–5,000 → Jewelry, Flowers, Personalized Mug, Gift Box.
 
+## Run with Docker
+
+A `docker-compose.yml` is provided at the repo root to spin up Postgres,
+the Django backend, and the Vite frontend together:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- **db** — Postgres 17, host port `5433`
+- **backend** — Django, host port `8090` (runs migrations automatically on start)
+- **frontend** — Vite dev server, host port `5180`
+
+Note: `db` publishes to host port `5433`. If you already have a Postgres
+container manually running on that port (e.g. from local development outside
+Docker Compose), stop it first with `docker stop <container>` or Compose's
+`db` service will fail to bind the port.
+
 ## Notes
 
 - Cart works for guests via `localStorage` and automatically syncs to the

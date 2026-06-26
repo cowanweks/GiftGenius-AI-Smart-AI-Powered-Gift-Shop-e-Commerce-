@@ -11,7 +11,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'price', 'occasion', 'gender', 'stock', 'rating', 'is_trending', 'is_featured')
-    list_filter = ('category', 'occasion', 'gender', 'is_trending', 'is_featured')
+    list_display = ('name', 'category', 'company', 'price', 'stock', 'rating', 'is_approved', 'is_trending', 'is_featured')
+    list_filter = ('category', 'occasion', 'gender', 'is_approved', 'is_trending', 'is_featured', 'company')
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}

@@ -42,6 +42,13 @@ class Product(models.Model):
     occasion = models.CharField(max_length=20, choices=OCCASION_CHOICES, default='general')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='unisex')
     stock = models.PositiveIntegerField(default=0)
+    company = models.ForeignKey(
+        'vendors.Company', on_delete=models.SET_NULL, null=True, blank=True, related_name='products',
+        help_text='Supplying company, if this product was listed by a vendor rather than the store admin.',
+    )
+    is_approved = models.BooleanField(
+        default=True, help_text='Vendor-submitted products start unapproved until admin reviews them.',
+    )
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     image_url = models.URLField(blank=True, help_text='Fallback external image URL')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)

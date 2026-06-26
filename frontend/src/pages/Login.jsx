@@ -18,9 +18,15 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     try {
-      await login(form)
+      const user = await login(form)
       toast.success('Welcome back!')
-      navigate(location.state?.from?.pathname || '/dashboard', { replace: true })
+      if (location.state?.from?.pathname) {
+        navigate(location.state.from.pathname, { replace: true })
+      } else if (user.is_vendor) {
+        navigate('/vendor', { replace: true })
+      } else {
+        navigate('/dashboard', { replace: true })
+      }
     } catch (err) {
       toast.error(err.response?.data?.non_field_errors?.[0] || 'Invalid username or password')
     } finally {
@@ -83,6 +89,12 @@ export default function Login() {
           </Link>
         </p>
         <p className="text-center text-xs text-gray-400 mt-3">Demo login: demo / Demo@123</p>
+        <p className="text-center text-xs text-gray-400 mt-2">
+          Own a gift business?{' '}
+          <Link to="/vendor/register" className="text-brand-purple font-semibold hover:underline">
+            Sell on GiftGenius
+          </Link>
+        </p>
       </motion.div>
     </div>
   )

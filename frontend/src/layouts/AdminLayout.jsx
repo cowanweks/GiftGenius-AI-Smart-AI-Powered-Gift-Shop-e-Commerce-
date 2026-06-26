@@ -1,10 +1,11 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
-import { FaGift, FaTachometerAlt, FaBoxOpen, FaShoppingBag, FaUsers, FaArrowLeft } from 'react-icons/fa'
+import { FaGift, FaTachometerAlt, FaBoxOpen, FaShoppingBag, FaUsers, FaArrowLeft, FaStore } from 'react-icons/fa'
 import { useAuth } from '../context/AuthContext'
 
 const LINKS = [
   { to: '/admin', label: 'Overview', icon: <FaTachometerAlt />, end: true },
   { to: '/admin/products', label: 'Products', icon: <FaBoxOpen /> },
+  { to: '/admin/vendors', label: 'Vendors', icon: <FaStore /> },
   { to: '/admin/orders', label: 'Orders', icon: <FaShoppingBag /> },
   { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
 ]

@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/orders/', include('orders.urls')),
     path('api/reminders/', include('reminders.urls')),
     path('api/recommendations/', include('recommendations.urls')),
+    path('api/vendors/', include('vendors.urls')),
 ]
 
 if settings.DEBUG:

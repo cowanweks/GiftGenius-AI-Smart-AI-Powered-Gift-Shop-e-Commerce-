@@ -13,6 +13,7 @@ class User(AbstractUser):
     address = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=100, blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    is_vendor = models.BooleanField(default=False, help_text='Account represents a company/supplier, not a shopper.')
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']

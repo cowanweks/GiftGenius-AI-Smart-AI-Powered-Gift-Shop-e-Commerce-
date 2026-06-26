@@ -8,13 +8,16 @@ import { WishlistProvider } from './context/WishlistContext'
 import MainLayout from './layouts/MainLayout'
 import DashboardLayout from './layouts/DashboardLayout'
 import AdminLayout from './layouts/AdminLayout'
+import VendorLayout from './layouts/VendorLayout'
 
 import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
+import VendorRoute from './routes/VendorRoute'
 
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import VendorRegister from './pages/VendorRegister'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import GiftFinder from './pages/GiftFinder'
@@ -30,6 +33,10 @@ import AdminOverview from './pages/admin/AdminOverview'
 import AdminProducts from './pages/admin/AdminProducts'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminUsers from './pages/admin/AdminUsers'
+import AdminVendors from './pages/admin/AdminVendors'
+
+import VendorProfile from './pages/vendor/VendorProfile'
+import VendorProducts from './pages/vendor/VendorProducts'
 
 function App() {
   return (
@@ -43,6 +50,7 @@ function App() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/vendor/register" element={<VendorRegister />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:slug" element={<ProductDetail />} />
                 <Route path="/gift-finder" element={<GiftFinder />} />
@@ -67,8 +75,16 @@ function App() {
                 <Route element={<AdminLayout />}>
                   <Route path="/admin" element={<AdminOverview />} />
                   <Route path="/admin/products" element={<AdminProducts />} />
+                  <Route path="/admin/vendors" element={<AdminVendors />} />
                   <Route path="/admin/orders" element={<AdminOrders />} />
                   <Route path="/admin/users" element={<AdminUsers />} />
+                </Route>
+              </Route>
+
+              <Route element={<VendorRoute />}>
+                <Route element={<VendorLayout />}>
+                  <Route path="/vendor" element={<VendorProfile />} />
+                  <Route path="/vendor/products" element={<VendorProducts />} />
                 </Route>
               </Route>
 
